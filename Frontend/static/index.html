@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rwanda Fuel Charge Locator</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body class="light-mode">
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-container">
+                <div class="logo">
+                    <i class="fas fa-gas-pump"></i>
+                    <h1>Rwanda Fuel Charge</h1>
+                </div>
+                <nav class="nav-menu">
+                    <button id="themeToggle" class="icon-button">
+            <i class="fas fa-moon"></i>
+          </button>
+                    <button id="authButton" class="auth-button">
+            <i class="fas fa-user"></i> Sign In
+          </button>
+                </nav>
+            </div>
+        </header>
+
+        <div class="main-container">
+            <div class="controls-panel">
+                <div class="search-container">
+                    <div class="input-group">
+                        <label for="fuelType"><i class="fas fa-filter"></i> Fuel Type</label>
+                        <select id="fuelType" class="styled-select">
+              <option value="all">All Stations</option>
+              <option value="petrol">Petrol</option>
+              <option value="diesel">Diesel</option>
+              <option value="gas">Gas</option>
+              <option value="electric">Electric Charging</option>
+            </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="radius"><i class="fas fa-map-marker-alt"></i> Search Radius</label>
+                        <select id="radius" class="styled-select">
+              <option value="2000">2 km</option>
+              <option value="5000" selected>5 km</option>
+              <option value="10000">10 km</option>
+              <option value="20000">20 km</option>
+            </select>
+                    </div>
+
+                    <button id="findStations" class="primary-button">
+            <i class="fas fa-search"></i> Find Stations
+          </button>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="viewPrices" class="secondary-button">
+            <i class="fas fa-dollar-sign"></i> Rwanda Prices
+          </button>
+                    <button id="locateMe" class="accent-button">
+            <i class="fas fa-location-arrow"></i> Locate Me
+          </button>
+                </div>
+            </div>
+
+            <div id="map" class="map-container"></div>
+        </div>
+
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3 id="sidebarTitle">Station Details</h3>
+                <button id="closeSidebar" class="icon-button close-button">
+          <i class="fas fa-times"></i>
+        </button>
+            </div>
+            <div id="sidebarContent" class="sidebar-content">
+                <!-- Dynamic content will be loaded here -->
+            </div>
+        </div>
+
+        <div class="toast" id="toast"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="js/routing.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eFuel Dashboard | Smart Fuel Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
+</head>
+
+<body class="light-mode">
+    <div class="app-container">
+        <!-- Header Section -->
+        <header class="app-header">
+            <div class="header-container">
+                <div class="logo">
+                    <i class="fas fa-bolt"></i>
+                    <h1>eFuel</h1>
+                </div>
+                <div class="header-actions">
+                    <button id="themeToggle" class="icon-button" aria-label="Toggle theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <div class="user-menu">
+                        <button id="userDropdown" class="user-button">
+                            <img src="https://ui-avatars.com/api/?name=User&background=4361ee&color=fff" alt="User" class="user-avatar">
+                            <span class="user-name">User</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div id="dropdownMenu" class="dropdown-content">
+                            <a href="#"><i class="fas fa-user"></i> Profile</a>
+                            <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-container">
+            <!-- Sidebar Navigation -->
+            <aside class="weather-clock-sidebar">
+                <div class="clock-container">
+                    <h3 class="section-title">Live Clock</h3>
+                    <div id="clock" class="compact-clock">00:00:00</div>
+                    <div id="compact-date" class="compact-date">Jan 1, 2023</div>
+                </div>
+
+                <div class="weather-container">
+                    <h3 class="section-title">Kigali Weather</h3>
+                    <div id="weather-summary">
+                        <div class="weather-visual">
+                            <canvas id="weatherCircleChart" width="80" height="80"></canvas>
+                            <div class="weather-icon">
+                                <i id="weather-icon" class="fas fa-sun" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="weather-details compact">
+                            <div class="weather-temp" id="weather-temp">28°C</div>
+                            <div class="weather-condition" id="weather-condition">Sunny</div>
+                            <div class="weather-humidity"><i class="fas fa-tint"></i> <span id="weather-humidity">60%</span></div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+
+            <!-- Dashboard Content -->
+            <main class="content-area">
+                <div class="content-header">
+                    <div class="breadcrumb">
+                        <span>Home</span> / <span>Dashboard</span>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <!-- Nearby Stations Card -->
+                    <div class="stat-card" id="stations-card">
+                        <div class="stat-icon bg-primary">
+                            <i class="fas fa-gas-pump"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stations-count">0</h3>
+                            <p>Stations Nearby</p>
+                            <div class="stat-tooltip">
+                                <small>Within 5km radius</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fuel Prices Card (Dynamic) -->
+                    <div class="stat-card" id="prices-card">
+                        <div class="stat-icon bg-success">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="current-price">-</h3>
+                            <p id="price-label">Avg. eFuel Price</p>
+                            <div class="fuel-type-selector">
+                                <select id="fuel-type-select" class="stat-dropdown">
+                                    <option value="electric">Electric</option>
+                                    <option value="petrol">Petrol</option>
+                                    <option value="diesel">Diesel</option>
+                                    <option value="gas">Gas</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Availability Card -->
+                    <div class="stat-card" id="availability-card">
+                        <div class="stat-icon bg-warning">
+                            <i class="fas fa-charging-station"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="availability-percent">0%</h3>
+                            <p>Availability</p>
+                            <div class="stat-tooltip">
+                                <small id="availability-detail">Calculating...</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User Savings Card (Optional) -->
+                    <div class="stat-card" id="savings-card">
+                        <div class="stat-icon bg-info">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="carbon-savings">-</h3>
+                            <p>CO<sub>2</sub> Saved</p>
+                            <div class="stat-tooltip">
+                                <small>This month</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Main Content Sections -->
+                <div class="content-grid">
+                    <!-- Map Section -->
+                    <div class="map-card">
+                        <div class="card-header">
+                            <h3>Interactive Map</h3>
+                            <div class="card-actions">
+                                <button id="fullscreenToggle" class="icon-button" title="Toggle Fullscreen">
+                                    <i id="fullscreenIcon" class="fas fa-expand"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="map-container">
+                            <div class="map-controls">
+                                <button id="locateMe" class="map-control-btn" title="Locate Me">
+                                    <i class="fas fa-location-arrow"></i>
+                                </button>
+                                <button id="zoomIn" class="map-control-btn" title="Zoom In">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <button id="zoomOut" class="map-control-btn" title="Zoom Out">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+
+                            <button id="exitFullscreen" class="map-control-btn fullscreen-close-btn" title="Exit Fullscreen">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <div id="map"></div>
+                        </div>
+                    </div>
+
+
+                    <!-- Price Trends -->
+                    <!-- Price Trends Card -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3>Fuel Price Trends</h3>
+                            <div class="chart-controls">
+                                <div class="fuel-type-selector">
+                                    <select id="fuelTypeSelect" class="chart-dropdown">
+                                        <option value="electric">Electric (€/kWh)</option>
+                                        <option value="petrol">Petrol (RWF/L)</option>
+                                        <option value="diesel">Diesel (RWF/L)</option>
+                                        <option value="gas">Gas (RWF/kg)</option>
+                                    </select>
+                                </div>
+                                <div class="time-filter">
+                                    <button class="time-btn active" data-period="week">Week</button>
+                                    <button class="time-btn" data-period="month">Month</button>
+                                    <button class="time-btn" data-period="year">Year</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="priceChart"></canvas>
+                            </div>
+                            <div class="chart-footer">
+                                <small>Last updated: <span id="lastUpdated">Loading...</span></small>
+                                <button id="refreshChart" class="refresh-btn">
+                                    <i class="fas fa-sync-alt"></i> Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="content-card quick-actions">
+                        <div class="card-header">
+                            <h3>Quick Actions</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="actions-grid">
+                                <button class="action-button" id="scanPayBtn">
+                <i class="fas fa-qrcode"></i>
+                <span>Scan and Pay</span>
+            </button>
+                                <button class="action-button" id="findStationBtn">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Find Station</span>
+            </button>
+                                <button class="action-button" id="historyBtn">
+                <i class="fas fa-history"></i>
+                <span>History</span>
+            </button>
+                                <button class="action-button" id="favoritesBtn">
+                <i class="fas fa-star"></i>
+                <span>Favorites</span>
+            </button>
+                                <button class="action-button" id="alertsBtn">
+                <i class="fas fa-bell"></i>
+                <span>Alerts</span>
+            </button>
+                                <button class="action-button" id="shareBtn">
+                <i class="fas fa-share-alt"></i>
+                <span>Share</span>
+            </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Structure -->
+                    <div id="modal" class="modal">
+                        <div class="modal-content">
+                            <span class="close-btn">&times;</span>
+                            <div class="modal-body" id="modalBody"></div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <!-- App Scripts -->
+    <script src="js/dashboard/theme.js"></script>
+    <script src="js/dashboard/map.js"></script>
+    <script src="js/dashboard/charts.js"></script>
+    <script src="js/dashboard/app.js"></script>
+    <script src="js/dashboard/stats.js"></script>
+    <script src="js/dashboard/weatherClock.js"></script>
+    <script src="js/dashboard/quickActions.js"></script>
+    <script src="js/dashboard/logout.js"></script>
+</body>
+
+</html>
