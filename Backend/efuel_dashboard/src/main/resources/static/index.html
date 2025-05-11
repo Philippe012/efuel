@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eFuel Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body class="light-mode">
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-gas-pump"></i> eFuel Admin</h2>
+                <button id="theme-toggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="#dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#stations"><i class="fas fa-gas-pump"></i> Fuel Stations</a></li>
+                    <li><a href="#prices"><i class="fas fa-tag"></i> Fuel Prices</a></li>
+                    <li><a href="#users"><i class="fas fa-users"></i> User Management</a></li>
+                    <li><a href="#emissions"><i class="fas fa-smog"></i> CO₂ Data</a></li>
+                    <li><a href="#notifications"><i class="fas fa-bell"></i> Notifications</a></li>
+                    <li><a href="#settings"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User" alt="Admin User">
+                    <div class="user-info">
+                        <span class="user-name">Admin User</span>
+                        <span class="user-role">Administrator</span>
+                    </div>
+                </div>
+                <button class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="main-header">
+                <h1 id="page-title">Dashboard Overview</h1>
+                <div class="header-actions">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <button class="notification-bell">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">3</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content Sections -->
+            <section id="dashboard-content" class="content-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-primary">
+                            <i class="fas fa-gas-pump"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Total Stations</h3>
+                            <p class="stat-value">247</p>
+                            <p class="stat-change"><i class="fas fa-arrow-up"></i> 12% from last month</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-success">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Available Stations</h3>
+                            <p class="stat-value">198</p>
+                            <p class="stat-change"><i class="fas fa-arrow-up"></i> 8% from last month</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Unavailable Stations</h3>
+                            <p class="stat-value">49</p>
+                            <p class="stat-change"><i class="fas fa-arrow-down"></i> 3% from last month</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-danger">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Active Users</h3>
+                            <p class="stat-value">5,328</p>
+                            <p class="stat-change"><i class="fas fa-arrow-up"></i> 22% from last month</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <h3>Fuel Price Trends (RWF)</h3>
+                        <canvas id="priceChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Station Availability</h3>
+                        <canvas id="availabilityChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-gas-pump"></i>
+                            </div>
+                            <div class="activity-details">
+                                <p>New station added: <strong>Kigali Heights Fuel</strong></p>
+                                <span class="activity-time">2 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-tag"></i>
+                            </div>
+                            <div class="activity-details">
+                                <p>Fuel prices updated for <strong>Petrol</strong></p>
+                                <span class="activity-time">5 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="activity-details">
+                                <p>New user registered: <strong>john.doe@example.com</strong></p>
+                                <span class="activity-time">1 day ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Fuel Stations Management Section (hidden by default) -->
+            <section id="stations-content" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h2>Fuel Stations Management</h2>
+                    <button class="btn btn-primary" id="add-station-btn">
+                        <i class="fas fa-plus"></i> Add New Station
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Station Name</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>Petrol (RWF)</th>
+                                <th>Diesel (RWF)</th>
+                                <th>Last Updated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Kigali Heights Fuel</td>
+                                <td>Kigali, KN 45 St</td>
+                                <td><span class="status-badge available">Available</span></td>
+                                <td>1,450</td>
+                                <td>1,380</td>
+                                <td>2023-06-15</td>
+                                <td>
+                                    <button class="btn-icon edit"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Green Energy Station</td>
+                                <td>Gisenyi, RW 101</td>
+                                <td><span class="status-badge unavailable">Unavailable</span></td>
+                                <td>1,420</td>
+                                <td>1,350</td>
+                                <td>2023-06-14</td>
+                                <td>
+                                    <button class="btn-icon edit"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <!-- More rows would be dynamically loaded -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Add/Edit Station Modal -->
+                <div id="station-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-modal">&times;</span>
+                        <h3 id="modal-title">Add New Fuel Station</h3>
+                        <form id="station-form">
+                            <div class="form-group">
+                                <label for="station-name">Station Name</label>
+                                <input type="text" id="station-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="station-location">Location</label>
+                                <input type="text" id="station-location" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="petrol-price">Petrol Price (RWF)</label>
+                                    <input type="number" id="petrol-price" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="diesel-price">Diesel Price (RWF)</label>
+                                    <input type="number" id="diesel-price" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="station-status">Status</label>
+                                <select id="station-status" required>
+                                    <option value="available">Available</option>
+                                    <option value="unavailable">Unavailable</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="station-co2">CO₂ Level (ppm)</label>
+                                <input type="number" id="station-co2">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Station</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Other sections (Prices, Users, Emissions, Notifications, Settings) would follow similar structure -->
+            <!-- Content would be loaded dynamically via JavaScript -->
+
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

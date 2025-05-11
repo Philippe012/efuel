@@ -6,6 +6,7 @@ class MapController {
         this.userCircle = null;
         this.watchId = null;
         this.routingControl = null;
+        this.fetchStations = [];
         this.init();
     }
 
@@ -14,16 +15,15 @@ class MapController {
             // Initialize with slight delay to ensure proper container sizing
             setTimeout(() => this.setupMap(), 100);
             this.setupEventListeners();
+            this.setupMap();
+            this.fetchStations();
         });
     }
 
     setupMap() {
-        // Kigali coordinates and bounds
-        const kigaliCoords = [-1.9706, 30.1044];
-        const kigaliBounds = L.latLngBounds(
-            L.latLng(-2.1, 29.9),
-            L.latLng(-1.8, 30.3)
-        );
+        this.map = L.map('map').setView([-1.9706, 30.1044], 13);
+         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.map);
+        
 
         // Create map instance
         this.map = L.map('map', {
@@ -34,21 +34,38 @@ class MapController {
             attributionControl: false
         });
 
-        // Store reference globally
         window.appMap = this.map;
-
-        // Add base tile layer
         this.addTileLayer();
-        
-        // Initialize routing
         this.setupRouting();
-        
-        // Add station markers
         this.addStations();
-        
-        // Initial locate attempt
         this.locateUser();
     }
+
+     async fetchStations() {
+        try {
+            const response = await fetch('/api/stations');
+            this.stations = await response.json();
+            this.addStationsToMap();
+            this.updateDashboardStats();
+        } catch (error) {
+            console.error('Error fetching stations:', error);
+        }
+    }
+
+    addStationsToMap() {
+        this.stations.forEach(station => {
+            L.marker([station.latitude, station.longitude])
+                .addTo(this.map)
+                .bindPopup(`<b>${station.name}</b><br>Price: ${station.price}€`);
+        });
+    }
+
+    updateDashboardStats() {
+        // Calculate nearby stations (within 5km) when location is available
+        const nearbyCount = this.stations.length; // In real app, filter by distance
+        document.getElementById('stations-count').textContent = nearbyCount;
+    }
+
 
     addTileLayer() {
         const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

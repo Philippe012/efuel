@@ -30,8 +30,46 @@
                         </button>
                         <div id="dropdownMenu" class="dropdown-content">
                             <a href="#"><i class="fas fa-user"></i> Profile</a>
-                            <a href="#"><i class="fas fa-cog"></i> Settings</a>
                             <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            <!-- Profile Update Modal -->
+                            <div id="profileModal" class="modal">
+                                <div class="modal-content">
+                                    <span class="close-modal">&times;</span>
+                                    <h3>Update Profile</h3>
+                                    <form id="profileForm">
+                                        <div class="form-group">
+                                            <label for="fullName">Full Name</label>
+                                            <input type="text" id="fullName" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="username">Username</label>
+                                            <input type="text" id="username" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="currentPassword">Current Password</label>
+                                            <input type="password" id="currentPassword">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="newPassword">New Password (leave blank to keep current)</label>
+                                            <input type="password" id="newPassword">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="confirmPassword">Confirm New Password</label>
+                                            <input type="password" id="confirmPassword">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="gender">Gender</label>
+                                            <select id="gender" required>
+                                            <option value="MALE">Male</option>
+                                            <option value="FEMALE">Female</option>
+                                            <option value="OTHER">Other</option>
+                                            <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>
+                                        </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -143,7 +181,7 @@
                     <!-- Map Section -->
                     <div class="map-card">
                         <div class="card-header">
-                            <h3>Interactive Map</h3>
+                            <h3>Get your station </h3>
                             <div class="card-actions">
                                 <button id="fullscreenToggle" class="icon-button" title="Toggle Fullscreen">
                                     <i id="fullscreenIcon" class="fas fa-expand"></i>
@@ -268,6 +306,7 @@
     <script src="js/dashboard/weatherClock.js"></script>
     <script src="js/dashboard/quickActions.js"></script>
     <script src="js/dashboard/logout.js"></script>
+    <script type="module" src="js/api/api.js"></script>
 </body>
 
 </html>

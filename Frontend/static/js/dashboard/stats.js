@@ -1,12 +1,7 @@
-// Stats Grid Data Management
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize stats
+document.addEventListener('DOMContentLoaded', function() {    
     updateDashboardStats();
-    
-    // Set up periodic refresh (every 5 minutes)
     setInterval(updateDashboardStats, 300000);
     
-    // Fuel type selector change handler
     document.getElementById('fuel-type-select').addEventListener('change', function() {
         updateFuelPriceDisplay(this.value);
     });
