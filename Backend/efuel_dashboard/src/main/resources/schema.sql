@@ -1,42 +1,45 @@
--- Tables creation
-CREATE TABLE IF NOT EXISTS users (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    full_name VARCHAR(100),
-    email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,    
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+-- Clear existing data (for development)
+DELETE FROM user_roles;
+DELETE FROM roles;
+DELETE FROM users;
+DELETE FROM fuel_prices;
+DELETE FROM fuel_stations;
 
-CREATE TABLE IF NOT EXISTS roles (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(20) NOT NULL UNIQUE
-);
+-- Insert roles
+INSERT INTO roles(name) VALUES('ROLE_USER');
+INSERT INTO roles(name) VALUES('ROLE_ADMIN');
 
-CREATE TABLE IF NOT EXISTS user_roles (
-    user_id BIGINT NOT NULL,
-    role_id BIGINT NOT NULL,
-    PRIMARY KEY (user_id, role_id),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (role_id) REFERENCES roles(id)
-);
+-- Insert admin user (password: admin123)
+INSERT INTO users(username, email, password, created_at) 
+VALUES('admin', 'admin@efuel.com', '$2a$10$ixElCCprZ99SNqYK3GQZQO5.5UQ7MZQGXuF/4wz7JNvj3Yd3XqXbK', CURRENT_TIMESTAMP);
 
-CREATE TABLE IF NOT EXISTS fuel_stations (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    location VARCHAR(255) NOT NULL,
-    status ENUM('AVAILABLE','UNAVAILABLE','MAINTENANCE') DEFAULT 'AVAILABLE',
-    latitude DECIMAL(10,8),
-    longitude DECIMAL(11,8),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+-- Insert regular users (password: user123)
+INSERT INTO users(username, email, password, created_at) 
+VALUES('user1', 'user1@efuel.com', '$2a$10$ixElCCprZ99SNqYK3GQZQO5.5UQ7MZQGXuF/4wz7JNvj3Yd3XqXbK', CURRENT_TIMESTAMP);
+INSERT INTO users(username, email, password, created_at) 
+VALUES('user2', 'user2@efuel.com', '$2a$10$ixElCCprZ99SNqYK3GQZQO5.5UQ7MZQGXuF/4wz7JNvj3Yd3XqXbK', CURRENT_TIMESTAMP);
 
-CREATE TABLE IF NOT EXISTS fuel_prices (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    station_id BIGINT NOT NULL,
-    fuel_type ENUM('PETROL','DIESEL','GAS','ELECTRIC CHARGE') NOT NULL,
-    price DECIMAL(10,2) NOT NULL,
-    recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (station_id) REFERENCES fuel_stations(id)
-);
+-- Assign roles
+INSERT INTO user_roles(user_id, role_id) VALUES(1, 2); -- admin is ADMIN
+INSERT INTO user_roles(user_id, role_id) VALUES(2, 1); -- user1 is USER
+INSERT INTO user_roles(user_id, role_id) VALUES(3, 1); -- user2 is USER
+
+-- Insert fuel stations
+INSERT INTO fuel_stations(name, location, status, latitude, longitude, created_at, updated_at)
+VALUES('Kigali Heights Fuel', 'KN 45 St, Kigali', 'AVAILABLE', -1.9536, 30.0606, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO fuel_stations(name, location, status, latitude, longitude, created_at, updated_at)
+VALUES('Green Energy Station', 'RW 101, Gisenyi', 'UNAVAILABLE', -1.6927, 29.2566, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- Insert fuel prices
+INSERT INTO fuel_prices(station_id, fuel_type, price, recorded_at)
+VALUES(1, 'PETROL', 1450, CURRENT_TIMESTAMP);
+
+INSERT INTO fuel_prices(station_id, fuel_type, price, recorded_at)
+VALUES(1, 'DIESEL', 1380, CURRENT_TIMESTAMP);
+
+INSERT INTO fuel_prices(station_id, fuel_type, price, recorded_at)
+VALUES(2, 'PETROL', 1420, CURRENT_TIMESTAMP);
+
+INSERT INTO fuel_prices(station_id, fuel_type, price, recorded_at)
+VALUES(2, 'DIESEL', 1350, CURRENT_TIMESTAMP);

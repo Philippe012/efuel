@@ -148,36 +148,37 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Mock API Functions (replace with real API calls)
-async function mockLogin(email, password) {
-  return new Promise((resolve, reject) => {
-      setTimeout(() => {
-          if (email === 'user@example.com' && password === 'password123') {
-              resolve({
-                  user: {
-                      id: 1,
-                      name: 'Demo User',
-                      email: email
-                  },
-                  token: 'mock_jwt_token_12345'
-              });
-          } else {
-              reject(new Error('Invalid email or password'));
-          }
-      }, 1000);
-  });
+async function loginUser(email, password) {
+    const response = await fetch('http://localhost:8080/api/auth/signin', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Login failed');
+    }
+
+    return await response.json(); // Expected: { user, token }
 }
 
-async function mockSignup(name, email, password) {
-  return new Promise((resolve) => {
-      setTimeout(() => {
-          resolve({
-              user: {
-                  id: Math.floor(Math.random() * 1000),
-                  name: name,
-                  email: email
-              },
-              token: 'mock_jwt_token_' + Math.random().toString(36).substr(2)
-          });
-      }, 1000);
-  });
+
+async function signupUser(username, email, password) {
+    const response = await fetch('http://localhost:8080/api/auth/signup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name: username, email, password })
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Signup failed');
+    }
+
+    return await response.json(); // Expected: { user, token }
 }

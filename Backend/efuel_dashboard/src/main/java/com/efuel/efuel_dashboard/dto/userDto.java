@@ -1,5 +1,5 @@
 package com.efuel.efuel_dashboard.dto;
 
-public class userDtio {
+public class userDto {
     
 }
