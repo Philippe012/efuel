@@ -1,43 +1,5 @@
-// Stations management
-document.addEventListener('DOMContentLoaded', function() {
-    // Load stations when stations view is shown
-    document.getElementById('stations-view').addEventListener('viewShown', loadStations);
-});
-
+// Load stations data
 function loadStations() {
-    const stationsView = document.getElementById('stations-view');
-    
-    // Sample stations content with CRUD functionality
-    stationsView.innerHTML = `
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title">Fuel Stations Management</h5>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#stationModal">
-                    <i class="fas fa-plus"></i> Add Station
-                </button>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Location</th>
-                                <th>Prices (RWF)</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="stationsTable">
-                            <!-- Stations will be loaded here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    // Load stations data
     fetch('/api/stations')
         .then(response => response.json())
         .then(stations => {
@@ -67,52 +29,120 @@ function loadStations() {
                     </td>
                 </tr>
             `).join('');
-            
+
             // Add event listeners for edit/delete buttons
             document.querySelectorAll('.edit-station').forEach(btn => {
                 btn.addEventListener('click', function() {
                     editStation(this.dataset.id);
                 });
             });
-            
+
             document.querySelectorAll('.delete-station').forEach(btn => {
                 btn.addEventListener('click', function() {
                     deleteStation(this.dataset.id);
                 });
             });
         })
-        .catch(error => {
-            console.error('Error loading stations:', error);
-        });
+        .catch(error => console.error('Error loading stations:', error));
 }
 
+// Create or update a station
+function saveStation(station) {
+    const method = station.id ? 'PUT' : 'POST';
+    const url = station.id ? `/api/stations/${station.id}` : '/api/stations';
+
+    fetch(url, {
+        method: method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(station)
+    })
+    .then(response => {
+        if (response.ok) {
+            loadStations(); // Refresh the list
+            alert('Station saved successfully!');
+        } else {
+            alert('Error saving station.');
+        }
+    });
+}
+
+// Edit a station
 function editStation(stationId) {
-    // Fetch station data and populate modal
     fetch(`/api/stations/${stationId}`)
         .then(response => response.json())
         .then(station => {
             const modal = document.getElementById('stationModal');
             modal.querySelector('.modal-title').textContent = `Edit Station: ${station.name}`;
-            
-            // Populate form fields
-            // This would be your actual form fields
-            // modal.querySelector('#stationName').value = station.name;
-            // etc...
-            
-            // Show modal
+            modal.querySelector('#stationName').value = station.name;
+            modal.querySelector('#stationLatitude').value = station.latitude;
+            modal.querySelector('#stationLongitude').value = station.longitude;
+            modal.querySelector('#stationElectricPrice').value = station.electricPrice;
+            modal.querySelector('#stationPetrolPrice').value = station.petrolPrice;
+            modal.querySelector('#stationDieselPrice').value = station.dieselPrice;
+            modal.querySelector('#stationGasPrice').value = station.gasPrice;
+            modal.querySelector('#stationActive').checked = station.active;
+
+            // Save changes
+            modal.querySelector('#saveStationBtn').onclick = function() {
+                const updatedStation = {
+                    id: station.id,
+                    name: modal.querySelector('#stationName').value,
+                    latitude: modal.querySelector('#stationLatitude').value,
+                    longitude: modal.querySelector('#stationLongitude').value,
+                    electricPrice: modal.querySelector('#stationElectricPrice').value,
+                    petrolPrice: modal.querySelector('#stationPetrolPrice').value,
+                    dieselPrice: modal.querySelector('#stationDieselPrice').value,
+                    gasPrice: modal.querySelector('#stationGasPrice').value,
+                    active: modal.querySelector('#stationActive').checked
+                };
+                saveStation(updatedStation);
+            };
+
             new bootstrap.Modal(modal).show();
         });
 }
 
+// Delete a station
 function deleteStation(stationId) {
     if (confirm('Are you sure you want to delete this station?')) {
-        fetch(`/api/stations/${stationId}`, {
-            method: 'DELETE'
-        })
-        .then(response => {
-            if (response.ok) {
-                loadStations(); // Refresh the list
-            }
-        });
+        fetch(`/api/stations/${stationId}`, { method: 'DELETE' })
+            .then(response => {
+                if (response.ok) {
+                    loadStations(); // Refresh the list
+                    alert('Station deleted successfully!');
+                } else {
+                    alert('Error deleting station.');
+                }
+            });
     }
 }
+
+// Add a new station
+document.getElementById('addStationBtn').addEventListener('click', function() {
+    const modal = document.getElementById('stationModal');
+    modal.querySelector('.modal-title').textContent = 'Add New Station';
+    modal.querySelector('#stationName').value = '';
+    modal.querySelector('#stationLatitude').value = '';
+    modal.querySelector('#stationLongitude').value = '';
+    modal.querySelector('#stationElectricPrice').value = '';
+    modal.querySelector('#stationPetrolPrice').value = '';
+    modal.querySelector('#stationDieselPrice').value = '';
+    modal.querySelector('#stationGasPrice').value = '';
+    modal.querySelector('#stationActive').checked = false;
+
+    modal.querySelector('#saveStationBtn').onclick = function() {
+        const newStation = {
+            name: modal.querySelector('#stationName').value,
+            latitude: modal.querySelector('#stationLatitude').value,
+            longitude: modal.querySelector('#stationLongitude').value,
+            electricPrice: modal.querySelector('#stationElectricPrice').value,
+            petrolPrice: modal.querySelector('#stationPetrolPrice').value,
+            dieselPrice: modal.querySelector('#stationDieselPrice').value,
+            gasPrice: modal.querySelector('#stationGasPrice').value,
+            active: modal.querySelector('#stationActive').checked
+        };
+        saveStation(newStation);
+    };
+
+    new bootstrap.Modal(modal).show();
+});

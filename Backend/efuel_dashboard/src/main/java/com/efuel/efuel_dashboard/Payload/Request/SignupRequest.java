@@ -1,9 +1,8 @@
 package com.efuel.efuel_dashboard.Payload.Request;
 
-
 import java.util.Set;
 
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 
 public class SignupRequest {
     @NotBlank

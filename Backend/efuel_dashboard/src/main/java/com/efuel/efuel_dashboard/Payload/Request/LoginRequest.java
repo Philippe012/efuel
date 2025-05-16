@@ -1,6 +1,6 @@
 package com.efuel.efuel_dashboard.Payload.Request;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 public class LoginRequest {
     @NotBlank

@@ -14,7 +14,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @SuppressWarnings("unused")
     @Autowired
     private PasswordEncoder passwordEncoder;
 

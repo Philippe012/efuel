@@ -1,6 +1,6 @@
 package com.efuel.efuel_dashboard.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "roles")

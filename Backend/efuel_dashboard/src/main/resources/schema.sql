@@ -1,45 +1,32 @@
--- Clear existing data (for development)
-DELETE FROM user_roles;
-DELETE FROM roles;
-DELETE FROM users;
-DELETE FROM fuel_prices;
-DELETE FROM fuel_stations;
+CREATE TABLE fuel_stations (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    latitude DOUBLE NOT NULL,
+    longitude DOUBLE NOT NULL,
+    electric_price DECIMAL(10, 2),
+    petrol_price DECIMAL(10, 2),
+    diesel_price DECIMAL(10, 2),
+    gas_price DECIMAL(10, 2),
+    active BOOLEAN DEFAULT TRUE
+);
 
--- Insert roles
-INSERT INTO roles(name) VALUES('ROLE_USER');
-INSERT INTO roles(name) VALUES('ROLE_ADMIN');
+CREATE TABLE users (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL
+);
 
--- Insert admin user (password: admin123)
-INSERT INTO users(username, email, password, created_at) 
-VALUES('admin', 'admin@efuel.com', '$2a$10$ixElCCprZ99SNqYK3GQZQO5.5UQ7MZQGXuF/4wz7JNvj3Yd3XqXbK', CURRENT_TIMESTAMP);
+CREATE TABLE co2_data (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    station_id BIGINT NOT NULL,
+    co2_emission DECIMAL(10, 2),
+    recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (station_id) REFERENCES fuel_stations(id)
+);
 
--- Insert regular users (password: user123)
-INSERT INTO users(username, email, password, created_at) 
-VALUES('user1', 'user1@efuel.com', '$2a$10$ixElCCprZ99SNqYK3GQZQO5.5UQ7MZQGXuF/4wz7JNvj3Yd3XqXbK', CURRENT_TIMESTAMP);
-INSERT INTO users(username, email, password, created_at) 
-VALUES('user2', 'user2@efuel.com', '$2a$10$ixElCCprZ99SNqYK3GQZQO5.5UQ7MZQGXuF/4wz7JNvj3Yd3XqXbK', CURRENT_TIMESTAMP);
-
--- Assign roles
-INSERT INTO user_roles(user_id, role_id) VALUES(1, 2); -- admin is ADMIN
-INSERT INTO user_roles(user_id, role_id) VALUES(2, 1); -- user1 is USER
-INSERT INTO user_roles(user_id, role_id) VALUES(3, 1); -- user2 is USER
-
--- Insert fuel stations
-INSERT INTO fuel_stations(name, location, status, latitude, longitude, created_at, updated_at)
-VALUES('Kigali Heights Fuel', 'KN 45 St, Kigali', 'AVAILABLE', -1.9536, 30.0606, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-
-INSERT INTO fuel_stations(name, location, status, latitude, longitude, created_at, updated_at)
-VALUES('Green Energy Station', 'RW 101, Gisenyi', 'UNAVAILABLE', -1.6927, 29.2566, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-
--- Insert fuel prices
-INSERT INTO fuel_prices(station_id, fuel_type, price, recorded_at)
-VALUES(1, 'PETROL', 1450, CURRENT_TIMESTAMP);
-
-INSERT INTO fuel_prices(station_id, fuel_type, price, recorded_at)
-VALUES(1, 'DIESEL', 1380, CURRENT_TIMESTAMP);
-
-INSERT INTO fuel_prices(station_id, fuel_type, price, recorded_at)
-VALUES(2, 'PETROL', 1420, CURRENT_TIMESTAMP);
-
-INSERT INTO fuel_prices(station_id, fuel_type, price, recorded_at)
-VALUES(2, 'DIESEL', 1350, CURRENT_TIMESTAMP);
+CREATE TABLE notifications (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
